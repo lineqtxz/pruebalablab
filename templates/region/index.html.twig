@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello RegionController!{% endblock %}
+
+{% block body %}
+<style>
+
+</style>
+
+<div class="example-wrapper">
+
+    {{ form_start(form, {'attr': {'id': 'formulario', 'method': 'POST'}}) }}
+        {{ form_widget(form.select) }}
+        <button>Enviar</button>
+    {{ form_end(form) }}
+</div>
+
+<div id='resultado'></div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#formulario').submit(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: '{{ path('datos_json')}}',
+                type: 'POST',
+                data: $('#formulario').serialize(),
+                dataType: 'json',
+                success: function(data) {
+                    $('#resultado').empty();
+                    const resultado = document.getElementById('resultado');
+                    const lista = document.createElement('ol');
+
+                    for (let i = 0; i < data.length; i++) {
+                    const item = document.createElement('li');
+                    item.innerText = data[i];
+                    lista.appendChild(item);
+                    }
+
+                    resultado.appendChild(lista);
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}
